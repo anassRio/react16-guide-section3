@@ -1,11 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import { sampleText } from "./sampleText";
 import { marked } from "marked";
-import { render } from "@testing-library/react";
 
 function App() {
   const [text, setText] = useState(sampleText);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // componenDidMount
+  useEffect(() => {
+    const storedText = localStorage.getItem("text") || sampleText;
+    setText(storedText);
+    setIsMounted(true);
+  }, []);
+
+  // componentDidUpdate
+  useEffect(() => {
+    if (isMounted) {
+      console.log("Le Text a changé !!");
+      localStorage.setItem("text", text);
+    }
+  }, [text, isMounted]);
 
   const handleTextAreaChange = (event) => {
     const modifiedText = event.target.value;
