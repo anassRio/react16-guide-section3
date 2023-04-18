@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "./App.css";
 import { sampleText } from "./sampleText";
+import { marked } from "marked";
+import { render } from "@testing-library/react";
 
 function App() {
   const [text, setText] = useState(sampleText);
@@ -8,6 +10,11 @@ function App() {
   const handleTextAreaChange = (event) => {
     const modifiedText = event.target.value;
     setText(modifiedText);
+  };
+
+  const renderText = (text) => {
+    const __html = marked(text, { sanitize: true });
+    return { __html };
   };
 
   return (
@@ -22,7 +29,12 @@ function App() {
           ></textarea>
         </div>
         <div className="col-sm-6">
-          <div>{text}</div>
+          {/** 
+           * dangerouslySetInnerHTML:
+           * Attention l'information vient d'un utilisateur ( elle peut representer
+          un danger)
+           */}
+          <div dangerouslySetInnerHTML={renderText(text)}></div>
         </div>
       </div>
     </div>
